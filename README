@@ -1,0 +1,31 @@
+Formbuilder and Formgrabber, simple CSRF (Cross Site Request Forgery) vulnerability test tools
+Created by Mark Merrill
+
+-- Files --
+formbuilder.html - simple html form builder that allows the creation of arbitrary html forms
+formgrabber.js - tool for harvesting html forms from existing web sites
+formgrabber_bookmarklet.html - utility to allow loading formgrabber on any site without manually adding the Javascript file to each page
+
+-- Assumed Knowledge --
+I am assuming that you have a good understanding of what a CSRF attack is and can figure out how this tool mimics one. Explaining the anatomy of a CSRF attack is not something I'm going to do in this documentation.
+
+-- Using the Tools --
+The idea here is to use FormBuilder to create html forms that mimic the forms on the site that you're testing. FormGrabber makes this much easier by allowing you to harvest forms from existing pages and import them into FormBuilder.
+
+To use:
+1. Set up the FormGrabber bookmarklet:
+ 1a. Since I haven't set up hosting for the FormGrabber js file, you will need to host this file on a web site somewhere -- if you try to link to the file locally, the bookmarklet won't work due to security errors.
+ 1b. Edit formgrabber_bookmarklet.html and replace <path_to_formgrabber.js> with the location that you are hosting the file.
+ 1c. Load up the formgrabber_bookmarklet.html page -- click the link to make sure it works (a grey box should appear) -- and drag the bookmarklet into your bookmark toolbar.
+2. Grab a form:
+ 2a. Load up a web site with a form.
+ 2b. Click on the bookmarklet; a grey box should appear.
+ 2c. Click Grab Forms!
+ 2d. Click in one of the text area inputs on the right side and copy the contents (it should automagically select everything in the box on the first click).
+3. Build a form and attempt a CSRF attack:
+ 3a. Load up the FormBuilder.
+ 3b. Paste the contents of the exported form from FormGrabber into the Load/Export Form box and click 'Load From Above'.
+ 3c. Enter data into the form and click 'Attempt CSRF Exploit'. The resulting page should load in the 'Result' area at the bottom of the page.
+ 
+Make sure you use formbuilder.html as a file on your computer or host it on a different domain than the site against which you are testing, otherwise the test isn't really a valid csrf attack.
+

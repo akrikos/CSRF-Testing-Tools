@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ForgMabber Bookmarklet!</title>
+<style type="text/css">
+#formgrabberlink {
+	background-color:#EFEFEF;
+	border:1px solid black;
+	color:#1A1A1A;
+	padding:4px;
+	text-decoration:none;
+}
+</style>
+</head>
+<body>
+<h2>FormGrabber Bookmarklet!</h2>
+<p>Instructions:</p>
+<ol>
+	<li>Edit this file and replace '&lt;path_to_formgrabber.js&gt;' with the absolute path to where you are hosting formgrabber.js.</li>
+	<li>Reload the file and drag the link below to your bookmark toolbar (creating a normal bookmark appears to have issues -- you probably don't want to create a normal bookmark.')</li>
+	<li>Any time you want the formgrabber to appear, click the bookmark in your toolbar!</li>
+	<li>...</li>
+	<li>Profit!</li>
+</ol>
+<p>
+	<a id="formgrabberlink" href="
+	javascript:(function(){
+	var script=document.createElement('script');
+	script.type='text/javascript';
+	script.src='http://<path_to_formgrabber.js>/formgrabber.js';
+	document.body.appendChild(script);
+	})();">FormGrabber</a> &larr; Drag that to the Bookmark Toolbar
+</p>
+<p>
+	As a <strong>quick test</strong>, you can click the link. If the Formgrabber appears, it should work in the browser you're currently using.
+</p>
+</body>
+</html>

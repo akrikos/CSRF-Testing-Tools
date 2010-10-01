@@ -1,0 +1,199 @@
+<html>
+<head>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+	<script>
+
+	$(document).ready(function() {
+		var form = $('#form'),
+			name = $('#name'),
+			value = $('#value');
+		
+		$('#addfield').click(function(event) {
+			addElement(name.val(), value.val());
+		});
+		
+		setUrl($('#url').val());
+		$('#url').change(function() {
+			setUrl($(this).val());
+		});
+		
+		setMethod($('#method').val());
+		$('#method').change(function() {
+			setMethod($(this).val());
+		});
+		
+		$('#enctype').change(function(event) {
+			if ($(event.target).val()) {
+				form.attr('enctype', $(event.target).val());
+			} else {
+				form.removeAttr('enctype');
+			}
+		});
+		$('#enctype').change();
+		
+		function setUrl(sUrl) {
+			form.attr('action', sUrl);
+		}
+
+		function setMethod(sMethod) {
+			form.attr('method', sMethod);
+		}
+
+		function addElement(sName, sValue) {
+			var label = $('<label for="'+sName+'">'+sName+'</label>');
+			var element = $('<input type="text" name="'+sName+'" id="'+sName+'" value="'+sValue+'">');
+			createField(label, element).appendTo(form);
+		}
+		
+		$('#csrf-submit').click(function() {
+			$(this).prev().submit();
+		});
+		
+		$('#getform').click(function() {
+			$('#savebox').val(getForm());
+		});
+		
+		$('#setform').click(function() {
+			setForm();
+		});
+		
+		$('#savebox').click(function() {
+			this.select();
+		});
+		
+		function getForm() {
+			clonedForm = form.clone();
+			clonedForm.find('a.remove').remove();
+			return JSON.stringify([clonedForm.html(),clonedForm.attr('action'), clonedForm.attr('method'), clonedForm.attr('enctype')]);
+		}
+		
+		function setForm() {
+			var formStuff = JSON.parse($('#savebox').val());
+			var formMethod = formStuff[2].toLowerCase();
+			var encType = formStuff[3].toLowerCase();			
+			form.html(formStuff[0]).find('.formGrabberFormElement').each(function() { $(this).append(getRemoveLink())});
+			form.attr('action', formStuff[1]);
+			$('#url').val(formStuff[1]);
+			form.attr('method', formMethod);
+			$('#method').val(formMethod);
+			$('#enctype').val(encType).change();
+		}	
+		
+		function createField(label, element) {
+			return $('<div class="formGrabberFormElement"></div>').append(label).append(element).append(getRemoveLink());
+		}
+		
+		function getRemoveLink() {
+			return $('<a class=\'remove\' href="#">\<- Remove This Field</a>').click(function(event) { removeElement(event); event.preventDefault();});
+		}
+		
+		function removeElement(event) {
+			 $(event.target).closest('div.formGrabberFormElement').remove();
+		};
+	});
+
+
+	</script>
+	<style type="text/css">
+	body {
+		font-family: sans-serif;
+	}
+	
+	h1 {
+		width: 100%;
+	}
+		
+	fieldset {
+		margin: 20px;
+	}
+	.column1 {
+		float:left;
+	}
+	.column2 {
+		float:left;
+	}
+	.nocolumn {
+		position: relative;
+		top: 20px;
+		clear:both;
+	}
+	#savebox {
+		width:400px;
+		height:200px;
+	}
+	
+	.builderElement {
+		padding: 5px;
+	}
+	
+	.formGrabberFormElement {
+		clear: both;
+		padding: 5px 0px 10px 5px;
+		vertical-align: top;
+	}
+	.formGrabberFormElement label {
+		display: block;
+	}
+	.formGrabberFormElement input, .formGrabberFormElement textarea, .formGrabberFormElement select {
+		display: inline-block;
+	}
+	a.remove {
+		clear:both;
+		float:right;
+		padding-left: 10px;
+	}
+	#csrf-form {
+		float:left;
+	}
+	#url{
+		width:500px;
+	}
+	</style>
+</head>
+<body>
+	<h1>CSRF FormBuilder</h1>
+	<p>NOTE: This file <strong>must</strong> be hosted on a different domain from the site you are testing against for the tests to be valid.</p>
+	<fieldset class="column1">
+		<legend>Build Form from Scratch</legend>
+		<div class="builderElement">
+			URL:
+			<input id='url' type='text'/>
+		</div>
+		<div class="builderElement">
+			Method:
+			<select id="method">
+				<option>get</option>
+				<option>post</option>
+			</select>
+		</div>
+		<div class="builderElement">
+			Enctype:
+			<select id="enctype">
+				<option value="">none</option>
+				<option value="multipart/form-data">multipart/form-data</option>
+			</select>
+			(Should be set to 'none' unless uploading a file.)
+		</div>
+		<div class="builderElement">
+			Name:<input type='text' id='name'> 
+			Value:<input type='text' id='value'>
+			<button id='addfield'>Add field</button>
+		</div>
+	</fieldset>
+	<fieldset class="column2">
+		<legend>Load/Export Form</legend>
+		<textarea id='savebox'></textarea><br/>
+		<button id="getform">Export to Above</button><button id="setform">Load from Above</button>
+	</fieldset>
+	<fieldset class="nocolumn" id="csrf-form">
+		<legend>Spoofed Form</legend>
+		<form id='form' method='get' href='#' target='thisisaframe'>			
+		</form>
+		<button id="csrf-submit">Attempt CSRF Exploit</button>
+	</fieldset>
+	<div class="nocolumn">
+		<h2>Result:</h2>
+		<iframe style="width:100%;height:1000px;" name="thisisaframe"></iframe>
+	</div>
+</body>
+</html>
