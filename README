@@ -30,7 +30,7 @@ To use:
 Make sure you use formbuilder.html as a file on your computer or host it on a different domain than the site against which you are testing, otherwise the test isn't really a valid csrf attack.
 
 
-   Copyright 2010 Mark Merrill
+   Copyright 2010 iContact
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
